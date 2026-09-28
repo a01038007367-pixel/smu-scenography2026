@@ -1,0 +1,117 @@
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  background:#fff;color:#000;overflow:hidden;
+  font-family:'Inter','Noto Sans KR',sans-serif;
+  display:grid;place-items:center;
+}
+
+/* ---------- 배경 (화면 1: 무대 바닥 느낌의 회색빛) ---------- */
+.bg{
+  position:fixed;inset:0;opacity:1;transition:opacity 1.4s ease;
+  background:
+    linear-gradient(to bottom,
+      transparent 0 20%, rgba(110,110,110,.32) 20% 21.6%, rgba(255,255,255,.95) 21.6% 23.5%,
+      transparent 23.5% 40%, rgba(110,110,110,.28) 40% 41.2%, transparent 41.2%),
+    radial-gradient(ellipse at 50% 45%, #fdfdfd 0%, #e6e6e6 100%);
+}
+body:not([data-screen="1"]) .bg{opacity:0}
+
+/* ---------- 발자국 ---------- */
+.prints{position:fixed;inset:0;pointer-events:none;transition:opacity .8s ease}
+body:not([data-screen="1"]) .prints{opacity:0}
+.print{
+  position:absolute;width:6.5vw;aspect-ratio:60/130;
+  opacity:0;filter:blur(1.1vw);
+  animation:step 1.5s ease-in-out both;
+  animation-delay:calc(var(--i) * .2s);
+}
+.print svg{width:100%;height:100%;fill:#3a3a3a;transform:scaleX(var(--f))}
+@keyframes step{
+  0%  {opacity:0;   transform:rotate(var(--r)) translateY(3vw) scale(.9)}
+  30% {opacity:.55}
+  70% {opacity:.5}
+  100%{opacity:0;   transform:rotate(var(--r)) translateY(-3vw) scale(1.06)}
+}
+
+/* ---------- 디자인 캔버스 (1440 x 950 비율 고정, cqw 단위) ---------- */
+.frame{
+  position:relative;width:min(100vw,calc(100vh * 1.516));aspect-ratio:1440/950;
+  container-type:inline-size;
+}
+.t{position:absolute;line-height:1;white-space:nowrap;transition:opacity .7s ease,transform .7s ease}
+.caption{
+  position:absolute;left:4.4%;top:4.7%;z-index:3;
+  font:700 1.65cqw/1.2 'Noto Sans KR',sans-serif;color:#333;
+}
+body:not([data-screen="1"]) .caption{color:#000}
+
+.a{left:25.8%;top:3.1%;font-size:20.8cqw;font-weight:900;z-index:3}
+.to{left:44%;top:21.3%;font-size:6.9cqw;font-weight:300;z-index:3}
+
+.date{right:3.6%;top:6.9%;font-size:6.9cqw;font-weight:300;z-index:3}
+.date i{display:inline-block;font-style:normal;transform:scaleX(-1);transition:transform 1s cubic-bezier(.6,0,.2,1)}
+body[data-screen="3"] .date i{transform:scaleX(1)}
+body[data-screen="3"] .date i:nth-child(n){transition-delay:calc(var(--n,0) * .04s)}
+
+.zip{left:51.9%;top:33.8%;font-size:20.8cqw;font-weight:900;letter-spacing:-.04em;z-index:3}
+.flip{display:inline-block;font-style:normal;transform:scaleX(-1)}
+.unzip{left:5.8%;top:57.3%;font-size:6.9cqw;font-weight:300;z-index:3}
+.stage{left:20.3%;top:64.4%;font-size:13.9cqw;font-weight:600;z-index:3}
+
+.com{left:10%;top:38.6%;font-size:8.7cqw;font-weight:300}
+.ing{left:81.7%;top:38.6%;font-size:8.7cqw;font-weight:300}
+.soon{left:19%;top:65.8%;font-size:6.6cqw;font-weight:900;z-index:3}
+.set{left:9.5%;top:10.4%;font-size:4.5cqw;font-weight:300;z-index:3}
+.custom{left:81.4%;top:73.3%;font-size:4.2cqw;font-weight:300;z-index:3}
+.production{left:11%;top:83.5%;font-size:4.2cqw;font-weight:300;z-index:3}
+
+/* 화면 전환 시 텍스트 */
+.s3{opacity:0;transform:translateY(1.2cqw)}
+body[data-screen="3"] .s3{opacity:1;transform:none;transition-delay:.5s}
+body[data-screen="3"] .s12{opacity:0;transform:translateY(-1.2cqw)}
+body[data-screen="3"] .soon{transition-delay:.8s}
+body[data-screen="3"] .custom{transition-delay:1.05s}
+body[data-screen="3"] .production{transition-delay:1.3s}
+
+/* ---------- 가방 이미지 ---------- */
+.bag-photo,.bag-xray{position:absolute;user-select:none;-webkit-user-drag:none}
+
+/* 화면 1: 검은 가방 (배경에 스며들도록 multiply) */
+.bag-photo{
+  left:29.5%;top:18.7%;width:46%;z-index:1;
+  mix-blend-mode:multiply;opacity:.82;
+  transition:opacity 1.2s ease .2s,filter 1.4s ease,transform 1.4s ease;
+}
+/* X-ray 가방 */
+.bag-xray{
+  left:30.9%;top:20.5%;width:50.1%;z-index:2;
+  clip-path:inset(0 100% 0 0);
+  filter:invert(1) hue-rotate(200deg) brightness(.7) contrast(1.6);
+  transition:clip-path 1.4s linear,filter 1.8s ease;
+}
+body:not([data-screen="1"]) .bag-xray{clip-path:inset(0 0 0 0);filter:none}
+body:not([data-screen="1"]) .bag-photo{
+  opacity:0;filter:invert(1) hue-rotate(190deg) brightness(1.3) contrast(1.4);
+  transform:translate(4.5cqw,-.4cqw) scale(1.08);
+}
+
+/* 스캔 라인 */
+.scan{
+  position:absolute;top:16%;height:72%;left:30.9%;width:.5cqw;z-index:4;opacity:0;
+  background:linear-gradient(to bottom,transparent,#9cc8ff 15%,#fff 50%,#9cc8ff 85%,transparent);
+  box-shadow:0 0 2.5cqw 1cqw rgba(90,160,255,.75);
+}
+body[data-screen="2"] .scan{animation:scan 1.4s linear both}
+@keyframes scan{
+  0%{left:30.9%;opacity:0}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{left:81%;opacity:0}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .print{animation-duration:.01s}
+  .bag-xray,.bag-photo,.bg,.t{transition-duration:.01s}
+  body[data-screen="2"] .scan{animation:none}
+}
