@@ -165,6 +165,7 @@ function show(v) {
   setTimeout(obs, 50);
   setTimeout(flip, 60);
   if (v === "about") spill();
+  if (v === "major") setTimeout(scen, 80);
 }
 $$("nav button").forEach((b) => (b.onclick = () => show(b.dataset.v)));
 // committee
@@ -474,3 +475,112 @@ if (matchMedia("(hover:hover) and (pointer:fine)").matches) {
   document.addEventListener("mouseleave", () => root.classList.remove("cc-on"));
   document.addEventListener("mouseenter", () => root.classList.add("cc-on"));
 }
+
+/* ==========================================================================
+   MAJOR — 흩어진 점들이 모여 "Scenography" 글자를 만드는 파티클 화면
+   ========================================================================== */
+let scenRaf = 0,
+  scenId = 0;
+async function scen() {
+  const cv = $("#scen");
+  if (!cv || !cv.offsetParent) return;
+  const id = ++scenId;
+  cancelAnimationFrame(scenRaf);
+  try {
+    await document.fonts.load("100px Anton");
+  } catch (e) {}
+  if (id !== scenId || !cv.offsetParent) return;
+
+  const dpr = Math.min(devicePixelRatio || 1, 2),
+    W = cv.clientWidth,
+    H = cv.clientHeight;
+  if (!W || !H) return;
+  cv.width = W * dpr;
+  cv.height = H * dpr;
+  const ctx = cv.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  // 글자를 화면 밖 캔버스에 그려서 픽셀 좌표를 뽑아냄
+  const WORD = "Scenography",
+    fam = 'Anton, Impact, "Arial Narrow Bold", sans-serif',
+    off = document.createElement("canvas");
+  off.width = W;
+  off.height = H;
+  const oc = off.getContext("2d");
+  oc.font = `400 100px ${fam}`;
+  const fs = Math.min((100 * W * 0.5) / oc.measureText(WORD).width, H * 0.2);
+  oc.font = `400 ${fs}px ${fam}`;
+  oc.textAlign = "center";
+  oc.textBaseline = "middle";
+  oc.fillText(WORD, W / 2, H * 0.52);
+  const gap = Math.max(3, Math.round(fs / 28)),
+    data = oc.getImageData(0, 0, W, H).data,
+    P = [];
+  for (let y = 0; y < H; y += gap)
+    for (let x = 0; x < W; x += gap)
+      if (data[(y * W + x) * 4 + 3] > 128)
+        P.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: 0,
+          vy: 0,
+          tx: x + (Math.random() - 0.5) * gap * 0.35,
+          ty: y + (Math.random() - 0.5) * gap * 0.35,
+          r: 0.9 + Math.pow(Math.random(), 2.4) * 2.1, // 작은 점이 많고 큰 점이 가끔 섞임
+          d: 600 + Math.random() * 1000, // 점마다 모이기 시작하는 시간(ms)
+        });
+
+  let mx = -999,
+    my = -999,
+    t0 = 0;
+  cv.onmousemove = (e) => {
+    const r = cv.getBoundingClientRect();
+    mx = e.clientX - r.left;
+    my = e.clientY - r.top;
+  };
+  cv.onmouseleave = () => (mx = my = -999);
+
+  (function loop(t) {
+    if (id !== scenId || !cv.offsetParent) return;
+    if (!t0) t0 = t;
+    const el = t - t0;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#050505";
+    ctx.beginPath();
+    for (const p of P) {
+      if (el < p.d) {
+        // 흩어져서 둥둥 떠다니는 단계
+        p.vx += (Math.random() - 0.5) * 0.5;
+        p.vy += (Math.random() - 0.5) * 0.5;
+        p.vx *= 0.96;
+        p.vy *= 0.96;
+      } else {
+        // 글자 위치로 모이는 단계
+        p.vx += (p.tx - p.x) * 0.055;
+        p.vy += (p.ty - p.y) * 0.055;
+        p.vx *= 0.82;
+        p.vy *= 0.82;
+      }
+      // 마우스 가까이 오면 점이 밀려남
+      const dx = p.x - mx,
+        dy = p.y - my,
+        dd = Math.hypot(dx, dy);
+      if (dd < 80 && dd > 0.1) {
+        const f = ((80 - dd) / 80) * 3.2;
+        p.vx += (dx / dd) * f;
+        p.vy += (dy / dd) * f;
+      }
+      p.x += p.vx;
+      p.y += p.vy;
+      ctx.moveTo(p.x + p.r, p.y);
+      ctx.arc(p.x, p.y, p.r, 0, 6.2832);
+    }
+    ctx.fill();
+    scenRaf = requestAnimationFrame(loop);
+  })(performance.now());
+}
+let scenTO;
+addEventListener("resize", () => {
+  clearTimeout(scenTO);
+  scenTO = setTimeout(scen, 200);
+});
