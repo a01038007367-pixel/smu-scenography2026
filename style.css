@@ -1903,3 +1903,105 @@ html.cc-hover .cur-box {
     display: none;
   }
 }
+
+/* ==========================================================================
+   MAJOR 개편: 0) Scenography 파티클  2) Professor (검정 배경 / 흰 글자)
+   ========================================================================== */
+#v-major > section.mj0 {
+  display: block;
+  padding: 0;
+  height: 100vh;
+  min-height: 100vh;
+}
+#scen {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#v-major > section.mj2 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(28px, 6vh, 64px);
+  background: #fff;
+  color: #050505;
+  padding: 150px 8vw 7vh;
+}
+.mj2 .pr-title {
+  color: #050505;
+  font-size: clamp(56px, 9vw, 140px);
+  line-height: 1;
+}
+.pr-list {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: baseline;
+  column-gap: clamp(24px, 4vw, 70px);
+  row-gap: 14px;
+  color: #050505;
+}
+.pr-role {
+  font-family: Montserrat, var(--kr);
+  font-weight: 800;
+  font-size: clamp(20px, 2.2vw, 34px);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+.pr-label,
+.pr-name {
+  font-size: clamp(12px, 1vw, 15px);
+}
+.mj2 .lk {
+  color: #050505;
+}
+.mj2 .lk .lk-smu {
+  background: #050505;
+  color: #fff;
+}
+.mj2 .mj-links {
+  margin-top: 0;
+  align-self: flex-end;
+}
+@media (max-width: 800px), (max-height: 700px) {
+  #v-major > section.mj0 {
+    height: 80vh;
+    min-height: 80vh;
+  }
+  #v-major > section.mj2 {
+    display: flex;
+    padding: 12vh 6vw;
+  }
+  .pr-list {
+    grid-template-columns: auto 1fr;
+  }
+  .pr-role {
+    grid-column: 1 / -1;
+    margin-top: 10px;
+  }
+  .pr-label {
+    grid-column: 1;
+  }
+  .mj2 .mj-links {
+    align-self: flex-start;
+  }
+}
+
+/* 굵은 제목 글꼴: Designer 폴더 제목(Set Design 등)과 같은 Anton */
+.mj-title {
+  font-family: "Noto Sans KR", sans-serif; /* Anton에는 한글이 없어 한글은 가장 굵은 Noto Sans KR */
+  font-weight: 900;
+}
+.mj-title .en,
+.mj-title.pr-title,
+.pr-role {
+  font-family: Anton, Impact, "Arial Narrow Bold", sans-serif;
+  font-weight: 400; /* Anton은 400이 이미 가장 굵음 (800 지정 시 억지 굵기가 생김) */
+  letter-spacing: 0.01em;
+}
+.mj-title .en {
+  font-size: 1.25em;
+}
