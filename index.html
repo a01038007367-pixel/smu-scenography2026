@@ -294,10 +294,15 @@
         <div class="ddetail" id="dd"></div>
       </div>
       <div class="view" id="v-major">
+        <!-- 0. 점들이 모여 Scenography 글자를 만드는 첫 화면 -->
+        <section class="mj0">
+          <canvas id="scen" aria-label="Scenography"></canvas>
+        </section>
+
         <!-- 1. 전공 소개 -->
         <section class="mj1">
           <div class="mj-left rv">
-            <h2 class="mj-title">상명대학교 무대미술전공 I<br />SCENOGRAPHY</h2>
+            <h2 class="mj-title">상명대학교 무대미술전공 I<br /><span class="en">SCENOGRAPHY</span></h2>
             <!-- 전공 로고: 실제 로고 이미지가 있으면 이 <svg> 전체를 <img src="images/major-logo.png" alt="">로 바꾸세요 -->
             <svg class="mj-logo" viewBox="0 0 360 190" role="img" aria-label="무대미술전공 로고">
               <rect width="360" height="190" fill="#050505" />
@@ -330,35 +335,38 @@
           </div>
         </section>
 
-        <!-- 2. 지도교수 + 학과 링크 -->
+        <!-- 2. 지도교수 + 학과 링크 (검정 배경 / 흰 글자) -->
         <section class="mj2">
-          <h2 class="mj-title rv">지도교수</h2>
-          <div class="mj-right rv">
-            <!-- 교수님 성함/직책은 여기서 수정하세요 -->
-            <div class="prof">
-              <span class="p1">예술대 학장</span>
-              <span class="p2">박진원 교수님</span>
-              <span class="p3">전공주임교수</span>
-              <span class="p4">김가은 교수님</span>
-              <span class="p5">김홍석 교수님</span>
-              <span class="p6">심형근 교수님</span>
-            </div>
-            <div class="mj-links">
-              <a class="lk" id="smu" target="_blank" rel="noopener">
-                <i class="lk-smu">상명</i>
-                <span>학과 홈페이지</span>
-              </a>
-              <a class="lk" id="insta" target="_blank" rel="noopener">
-                <i>
-                  <svg viewBox="0 0 24 24" width="44" fill="none" stroke="#050505" stroke-width="2">
-                    <rect x="3" y="3" width="18" height="18" rx="5" />
-                    <circle cx="12" cy="12" r="4" />
-                    <circle cx="17.5" cy="6.5" r="1" fill="#050505" />
-                  </svg>
-                </i>
-                <span>학과 인스타그램</span>
-              </a>
-            </div>
+          <h2 class="mj-title pr-title rv">Professor</h2>
+          <!-- 교수님 성함은 여기서 수정하세요 -->
+          <div class="pr-list rv">
+            <span class="pr-role">Set</span>
+            <span class="pr-label">세트</span>
+            <span class="pr-name">김가은 교수님</span>
+
+            <span class="pr-role">Production</span>
+            <span class="pr-label">프로덕션</span>
+            <span class="pr-name">심형근 교수님</span>
+
+            <span class="pr-role">Costume</span>
+            <span class="pr-label">의상</span>
+            <span class="pr-name">박진원 교수님 &nbsp; 장혜숙 교수님</span>
+          </div>
+          <div class="mj-links rv">
+            <a class="lk" id="smu" target="_blank" rel="noopener">
+              <i class="lk-smu">상명</i>
+              <span>학과 홈페이지</span>
+            </a>
+            <a class="lk" id="insta" target="_blank" rel="noopener">
+              <i>
+                <svg viewBox="0 0 24 24" width="44" fill="none" stroke="#050505" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle cx="17.5" cy="6.5" r="1" fill="#050505" />
+                </svg>
+              </i>
+              <span>학과 인스타그램</span>
+            </a>
           </div>
         </section>
       </div>
