@@ -181,7 +181,7 @@ const COMMITTEE = [
   { role: "총무", name: "김민경" },
   { role: "세트장", name: "김서영" },
   { role: "의상장", name: "박소연" },
-  { role: "프덕장", name: "홍종표" },
+  { role: "프로덕션장", name: "홍종표" },
 ];
 COMMITTEE.forEach((m, i) => {
   $("#cg").insertAdjacentHTML(
