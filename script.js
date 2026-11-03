@@ -1,0 +1,615 @@
+// ★ 링크는 여기서 수정하세요
+const PROMO = "https://youtu.be/h_qvn5gGQIk"; // 홍보 영상 링크
+const MAKING = "https://www.youtube.com/"; // 메이킹 필름 링크
+const YOUTUBE = "https://www.youtube.com/", // Archive 링크
+  INSTAGRAM = "https://www.instagram.com/",
+  SMU = "https://www.smu.ac.kr/",
+  MAP =
+    "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent("서울 용산구 이태원로 1289 BUNCKER");
+const $ = (s) => document.querySelector(s),
+  $$ = (s) => [...document.querySelectorAll(s)];
+$("#yt2").href = YOUTUBE;
+$("#yt1").href = PROMO;
+$("#yt3").href = MAKING;
+$("#insta").href = INSTAGRAM;
+$("#smu").href = SMU;
+$("#mapl").href = $("#mapb").href = MAP;
+
+$("#mq").textContent = "A to .ZIP ✕ unzip the stage ✕ 2026.12.09–12.12 ✕ BUNCKER B1,B2 ✕ ".repeat(
+  8,
+);
+// intro
+const L = $("#letters");
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach((c, i) => {
+  const s = document.createElement("span");
+  s.textContent = c;
+  s.style.cssText = `left:${Math.random() * 95}%;top:${Math.random() * 85}%;font-size:${60 + Math.random() * 160}px;animation-delay:${-Math.random() * 7}s`;
+  L.appendChild(s);
+});
+const lensL = $("#lensL"),
+  tt2 = $("#tt2"),
+  sh = $("#sh"),
+  zu = $$(".zu"),
+  zc = $$(".zc");
+let t0 = null,
+  cur = 0,
+  AM = 0.34,
+  diving = 0,
+  first = 1,
+  mrx = 0,
+  mry = 0,
+  brx = 14,
+  tz = 0;
+const scene = $("#scene");
+function setScene() {
+  scene.style.transform = `translateZ(${tz}px) rotateY(${mry}deg) rotateX(${mrx + brx}deg)`;
+}
+function lens(sx) {
+  cur = sx;
+  const W = innerWidth,
+    H = innerHeight,
+    cy = H / 2,
+    A = H * AM,
+    N = 80,
+    up = [],
+    dn = [];
+  for (let i = 0; i <= N; i++) {
+    const x = (W * i) / N,
+      h = A * Math.sin((Math.PI * i) / N) * Math.min(Math.max((sx - x) / (W * 0.28), 0), 1);
+    up.push([x, cy - h]);
+    dn.push([x, cy + h]);
+  }
+  lensL.style.clipPath =
+    "polygon(" +
+    up
+      .concat([...dn].reverse())
+      .map((p) => p[0].toFixed(1) + "px " + p[1].toFixed(1) + "px")
+      .join(",") +
+    ")";
+  const d = (a) =>
+    a.length > 1 ? "M" + a.map((p) => p[0].toFixed(1) + "," + p[1].toFixed(1)).join("L") : "";
+  const u = up.filter((p) => p[0] <= sx),
+    l = dn.filter((p) => p[0] <= sx);
+  zu[0].setAttribute("d", d(u));
+  zu[1].setAttribute("d", d(l));
+  zu[2].setAttribute("d", d(u));
+  zu[3].setAttribute("d", d(l));
+  const xs = Math.min(sx, W - 26);
+  zc.forEach((p) => p.setAttribute("d", sx < W ? `M${Math.max(sx, 0)},${cy}H${W}` : ""));
+  sh.setAttribute("transform", `translate(${xs} ${cy})`);
+}
+function zip(t) {
+  if (!t0) t0 = t + 200;
+  const k = Math.min(Math.max((t - t0) / 1500, 0), 1),
+    e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+  lens(e * innerWidth * 1.3);
+  brx = 14 * (1 - e);
+  setScene();
+  if (k < 1) requestAnimationFrame(zip);
+  else {
+    window.zd = 1;
+    if (first) {
+      first = 0;
+      setTimeout(enter, 450);
+    }
+  }
+}
+lens(0);
+requestAnimationFrame(zip);
+addEventListener("resize", () => lens(cur));
+document.addEventListener("mousemove", (e) => {
+  if (!document.body.classList.contains("intro")) return;
+  const x = e.clientX / innerWidth - 0.5,
+    y = e.clientY / innerHeight - 0.5;
+  tt2.style.transform = `perspective(900px) rotateY(${x * 22}deg) rotateX(${-y * 16}deg)`;
+  mry = x * 10;
+  mrx = -y * 8;
+  setScene();
+  L.style.transform = `translate(${-x * 40}px,${-y * 40}px)`;
+});
+let lock = 0; // enter() 중복 실행 방지용 타이머
+function enter() {
+  if (!document.body.classList.contains("intro") || Date.now() < lock || diving) return;
+  diving = 1;
+  lock = Date.now() + 2500;
+  $("#intro").classList.add("dive");
+  lensL.style.background = "#fff";
+  const s = performance.now();
+  (function f(t) {
+    const k = Math.min((t - s) / 750, 1);
+    AM = 0.34 + 1.3 * k * k * k;
+    tz = k * k * 520;
+    setScene();
+    lens(cur);
+    if (k < 1) requestAnimationFrame(f);
+    else {
+      lensL.style.clipPath = "none";
+      document.body.classList.remove("intro");
+      tt2.style.transform = "";
+      $("#tt").style.transform = "none";
+      scrollTo(0, 0);
+      diving = 0;
+      flip();
+      setTimeout(spill, 300);
+    }
+  })(s);
+}
+addEventListener(
+  "wheel",
+  () => {
+    if (window.zd) enter();
+  },
+  { passive: true },
+);
+addEventListener(
+  "touchmove",
+  () => {
+    if (window.zd) enter();
+  },
+  { passive: true },
+);
+addEventListener("keydown", () => {
+  if (window.zd) enter();
+});
+$("#intro").onclick = () => {
+  if (window.zd) enter();
+};
+$("#title").onclick = () => {
+  if (!document.body.classList.contains("intro")) show("about");
+};
+// nav
+function show(v) {
+  $$(".view").forEach((x) => x.classList.toggle("on", x.id === "v-" + v));
+  $$("nav button").forEach((b) => b.classList.toggle("on", b.dataset.v === v));
+  resetD(); // 어떤 메뉴로 이동하든 Designer는 폴더 목록 상태로 초기화
+  scrollTo(0, 0);
+  setTimeout(obs, 50);
+  setTimeout(flip, 60);
+  if (v === "about") spill();
+  if (v === "major") setTimeout(scen, 80);
+}
+$$("nav button").forEach((b) => (b.onclick = () => show(b.dataset.v)));
+// committee
+/* ★ 졸업전시 준비 위원회 이름은 여기서 수정하세요
+   name 에 이름을 적으면 카드에 표시됩니다. (여러 명이면 "홍길동, 김철수" 처럼 쉼표로 구분) */
+const COMMITTEE = [
+  { role: "위원장", name: "이서빈" },
+  { role: "부위원장", name: "이진 조은아" },
+  { role: "디피팀", name: "서수빈 오은지 이해인" },
+  { role: "편집팀", name: "이가령 권효정 조다현" },
+  { role: "총무", name: "김민경" },
+  { role: "세트장", name: "김서영" },
+  { role: "의상장", name: "박소연" },
+  { role: "프덕장", name: "홍종표" },
+];
+COMMITTEE.forEach((m, i) => {
+  $("#cg").insertAdjacentHTML(
+    "beforeend",
+    `<div class="cm" style="--i:${i}"><span>0${i + 1}</span><b>${m.role}</b><em>${m.name}</em></div>`,
+  );
+});
+// reveal
+const io = new IntersectionObserver(
+  (es) =>
+    es.forEach((e) => {
+      if (e.isIntersecting) e.target.classList.add("in");
+    }),
+  { threshold: 0.2 },
+);
+function obs() {
+  $$(".rv,.posters").forEach((x) => io.observe(x));
+}
+obs();
+// posters
+$$(".pc").forEach((p, i) => {
+  p.style.setProperty("--sx", (1.5 - i) * 105 + "%");
+  p.style.setProperty("--rr", (i - 1.5) * 9 + "deg");
+  p.style.transitionDelay = i * 0.12 + "s";
+  p.addEventListener("mousemove", (e) => {
+    const r = p.getBoundingClientRect(),
+      x = (e.clientX - r.left) / r.width - 0.5,
+      y = (e.clientY - r.top) / r.height - 0.5;
+    p.style.setProperty("--ty", x * 22 + "deg");
+    p.style.setProperty("--tx", -y * 22 + "deg");
+    p.style.transitionDelay = "0s";
+    p.style.zIndex = 5;
+  });
+  p.addEventListener("mouseleave", () => {
+    p.style.setProperty("--ty", "0deg");
+    p.style.setProperty("--tx", "0deg");
+    p.style.zIndex = 0;
+  });
+});
+setTimeout(() => $("#ps").classList.add("fan"), 100);
+/* ==========================================================================
+   DESIGNER
+   - 큰 폴더 3개(Scenic / Costume / Production) → 클릭 → 디자이너 폴더 카드 목록
+   - 카드 클릭 → 상세 페이지 (프로필 → 작품 소개 → 장면 사진 6장 → 유튜브 링크)
+   ★ 디자이너 내용은 designers.js 에서 입력하세요. (이 파일은 수정할 필요 없음)
+   ========================================================================== */
+
+const PARTS = [
+  { key: "scenic", name: "Scenic Design", role: "Scenic Designer" },
+  { key: "costume", name: "Costume Design", role: "Costume Designer" },
+  { key: "production", name: "Production Design", role: "Production Designer" },
+];
+const names = PARTS.map((p) => p.name);
+const ROLES = PARTS.map((p) => p.role); // 카드 상단 문구
+const FOLDER_COLORS = [
+  "#7ecfdc", // 하늘
+  "#8fd196", // 연두
+  "#3b78cf", // 파랑
+  "#ee4b36", // 빨강
+  "#cbe88c", // 라임
+  "#8f8f8f", // 회색
+  "#ee7e55", // 주황
+  "#e8628c", // 분홍
+];
+
+// designers.js 의 내용을 화면에서 쓰기 좋은 형태로 정리 (사진 경로 자동 지정 포함)
+const DESIGNERS = PARTS.map((p) =>
+  ((typeof DESIGNER_DATA !== "undefined" ? DESIGNER_DATA : {})[p.key] || []).map((d, k) => {
+    const num = String(k + 1).padStart(2, "0"),
+      base = `images/designer/${p.key}/${num}/`,
+      sc = d.scenes || [];
+    return {
+      ...d,
+      num,
+      photo: d.photo || base + "profile.jpg",
+      images: Array.from({ length: 6 }, (_, n) => (d.images && d.images[n]) || `${base}${n + 1}.jpg`),
+      scenes: Array.from({ length: 6 }, (_, n) => sc[n] || [`S#${n + 1}.`, ""]),
+    };
+  }),
+);
+// 글자 안전 처리 + 줄바꿈을 화면 줄바꿈으로
+const esc = (v) =>
+  String(v ?? "")
+    .trim()
+    .replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const br = (v) => esc(v).replace(/\n/g, "<br>");
+// 사진이 아직 없으면 img를 지우고 회색 빈칸(span)만 남김
+const imgTag = (src, alt) =>
+  `<img alt="${esc(alt)}" src="${esc(src)}" loading="lazy" onerror="this.remove()">`;
+
+const F = $("#folders"),
+  dh = $("#dh"),
+  dg = $("#dg"),
+  dd = $("#dd"),
+  hint = $("#hint");
+let goBack = resetD; // "← 파트명" 버튼이 돌아갈 곳
+
+/* ---------- 1) 큰 폴더 3개 ---------- */
+names.forEach((n, i) =>
+  F.insertAdjacentHTML(
+    "beforeend",
+    `<div class="fo" data-i="${i}"><h3>${n}</h3><small>0${i + 1} / ${DESIGNERS[i].length}</small></div>`,
+  ),
+);
+const fos = $$(".fo");
+document.addEventListener("mousemove", (e) => {
+  if (!F.offsetParent) return;
+  fos.forEach((f) => {
+    const r = f.getBoundingClientRect(),
+      cy = r.top + 60,
+      d = Math.abs(e.clientY - cy);
+    const open = Math.max(0, 1 - d / 260);
+    f.style.setProperty("--r", -26 + open * 24 + "deg");
+  });
+});
+fos.forEach((f) => (f.onclick = () => openD(+f.dataset.i)));
+
+/* ---------- 2) 디자이너 폴더 카드 목록 ---------- */
+function openD(i) {
+  F.style.display = "none";
+  hint.style.display = "none";
+  dd.classList.remove("on");
+  $("#v-designer").classList.remove("detail");
+
+  dg.classList.add("on");
+  dg.innerHTML = DESIGNERS[i]
+    .map(
+      (d, k) => `
+      <div class="pf" data-k="${k}" style="--i:${k};--c:${FOLDER_COLORS[k % FOLDER_COLORS.length]}">
+        <div class="fd">
+          <i class="tab"></i>
+          <i class="paper"></i>
+          <div class="fb">
+            <small>${ROLES[i]}</small>
+            <b>${esc(d.titleEn || d.titleKo) || "—"}</b>
+            <p class="nm"><span>${esc(d.ko) || "Designer " + d.num}</span><span>${esc(d.en)}</span></p>
+          </div>
+        </div>
+      </div>`,
+    )
+    .join("");
+
+  $$(".pf").forEach((p) => {
+    const fd = p.querySelector(".fd");
+    p.onclick = () => openP(i, +p.dataset.k);
+    // 커서 위치에 따라 폴더가 살짝 기울며 따라 움직임
+    p.onmousemove = (e) => {
+      const r = p.getBoundingClientRect(),
+        x = (e.clientX - r.left) / r.width - 0.5,
+        y = (e.clientY - r.top) / r.height - 0.5;
+      fd.style.setProperty("--ry", x * 14 + "deg");
+      fd.style.setProperty("--rx", -y * 14 + "deg");
+      fd.style.setProperty("--tx", x * 8 + "px");
+    };
+    p.onmouseleave = () => {
+      fd.style.setProperty("--ry", "0deg");
+      fd.style.setProperty("--rx", "0deg");
+      fd.style.setProperty("--tx", "0px");
+    };
+  });
+
+  dh.textContent = "← " + names[i];
+  dh.style.display = "block";
+  goBack = resetD;
+  scrollTo(0, 0);
+}
+$$(".dtabs button").forEach((b, i) => (b.onclick = () => openD(i)));
+
+/* ---------- 3) 디자이너 상세 페이지 ---------- */
+function openP(i, k) {
+  const d = DESIGNERS[i][k];
+  dg.classList.remove("on");
+  $("#v-designer").classList.add("detail");
+
+  const scenes = d.scenes
+    .map(
+      (c, n) => `
+    <!-- 3-${n + 1}. 장면 사진 -->
+    <div class="dp dp-dark dp-scene">
+      <figure class="sc rv">
+        <div class="shot"><span>SCENE ${n + 1}</span>${imgTag(d.images[n], `${d.titleKo || d.titleEn} ${n + 1}`)}</div>
+        <figcaption>${br(c[0])}<br>${br(c[1])}</figcaption>
+      </figure>
+    </div>`,
+    )
+    .join("");
+
+  dd.innerHTML = `
+    <!-- 1. 프로필 -->
+    <div class="dp dp1">
+      <div class="dp1-info rv">
+        <h4 class="role">${ROLES[i]}</h4>
+        <div class="who">
+          <span class="ko">${esc(d.ko) || "이름"}</span><span class="en">${esc(d.en)}</span>
+        </div>
+        <p class="mail"><b>E-Mail</b>${esc(d.email)}</p>
+      </div>
+      <div class="dp1-photo rv"><span>PROFILE</span>${imgTag(d.photo, d.en || d.ko)}</div>
+    </div>
+
+    <!-- 2. 작품 소개 -->
+    <div class="dp dp-dark dp2">
+      <div class="dk rv">
+        <p class="t-en">${esc(d.titleEn)}</p>
+        <h3 class="t-ko">${esc(d.titleKo)}</h3>
+        <hr class="top">
+        <p class="desc">${br(d.desc)}</p>
+        <div class="tc"><b>주제 Topic</b><p>${br(d.topic)}</p></div>
+        <div class="tc"><b>콘셉트 Concept</b><p>${br(d.concept)}</p></div>
+        <hr class="bot">
+      </div>
+    </div>
+    ${scenes}
+    ${
+      PARTS[i].key === "production" // 유튜브 영상 링크는 Production 파트만
+        ? `<!-- 4. 유튜브 영상 링크 -->
+    <div class="dp dp-dark dp-yt">
+      ${
+        d.youtube
+          ? `<a class="ytl rv" href="${esc(d.youtube)}" target="_blank" rel="noopener">
+        <span>▶ YOUTUBE ↗</span><small>${esc(d.titleKo || d.titleEn)} 작품 영상 보기</small>
+      </a>`
+          : `<div class="ytl off rv"><span>▶ YOUTUBE</span><small>영상 링크 준비 중</small></div>`
+      }
+    </div>`
+        : ""
+    }`;
+  dd.classList.add("on");
+  obs();
+
+  dh.textContent = "← " + names[i];
+  goBack = () => openD(i); // 상세 → 해당 파트 목록
+  scrollTo(0, 0);
+}
+
+/* ---------- 4) 폴더 목록(처음 화면)으로 복귀 ---------- */
+function resetD() {
+  F.style.display = "";
+  hint.style.display = "";
+  dg.classList.remove("on");
+  dd.classList.remove("on");
+  $("#v-designer").classList.remove("detail");
+  $$(".dtabs button").forEach((b) => b.classList.remove("on"));
+  dh.style.display = "none";
+  goBack = resetD;
+}
+dh.onclick = () => goBack();
+
+// 카드 넘기는 느낌: 화면 위치에 따라 섹션이 기울며 사라지고 나타남
+const small = matchMedia("(max-width:800px),(max-height:700px)");
+function flip() {
+  const H = innerHeight;
+  $$(".view section").forEach((s) => {
+    if (small.matches || !s.offsetParent) {
+      s.style.transform = s.style.opacity = "";
+      return;
+    }
+    const p = s.getBoundingClientRect().top / H;
+    let t = "",
+      o = 1;
+    if (p < 0) {
+      const k = Math.min(-p, 1);
+      t = `perspective(1400px) rotateX(${k * 16}deg) scale(${1 - k * 0.08})`;
+      o = 1 - k * 0.85;
+    } else if (p > 0) {
+      const k = Math.min(p, 1);
+      t = `perspective(1400px) rotateX(${-k * 10}deg) scale(${1 - k * 0.05})`;
+      o = 1 - k * 0.6;
+    }
+    s.style.transformOrigin = p < 0 ? "50% 100%" : "50% 0";
+    s.style.transform = t;
+    s.style.opacity = o;
+  });
+}
+addEventListener("scroll", flip, { passive: true });
+addEventListener("resize", flip);
+// About 첫 화면: 닫힌 가방이 흔들리다 열리며 물건이 쏟아짐
+function spill() {
+  const o = $("#obj");
+  if (!o) return;
+  o.classList.remove("go");
+  void o.offsetWidth;
+  setTimeout(() => o.classList.add("go"), 200);
+}
+
+/* ==========================================================================
+   CUSTOM CURSOR — 초록 사각형 + 검은색 십자선
+   ========================================================================== */
+if (matchMedia("(hover:hover) and (pointer:fine)").matches) {
+  const root = document.documentElement;
+  const cx = document.createElement("div"),
+    cy = document.createElement("div"),
+    cb = document.createElement("div");
+  cx.className = "cur-x";
+  cy.className = "cur-y";
+  cb.className = "cur-box";
+  document.body.append(cx, cy, cb);
+  root.classList.add("cc");
+
+  let mx = 0,
+    my = 0,
+    raf = 0;
+  const paint = () => {
+    raf = 0;
+    cx.style.transform = `translate(${mx}px,${my}px)`;
+    cy.style.transform = `translate(${mx}px,${my}px)`;
+    cb.style.transform = `translate(${mx}px,${my}px)`;
+  };
+  document.addEventListener(
+    "mousemove",
+    (e) => {
+      mx = e.clientX;
+      my = e.clientY;
+      root.classList.add("cc-on");
+      root.classList.toggle("cc-hover", !!e.target.closest("a,button,[onclick],.fo,.pf,.cm,.pc"));
+      if (!raf) raf = requestAnimationFrame(paint);
+    },
+    { passive: true },
+  );
+  document.addEventListener("mouseleave", () => root.classList.remove("cc-on"));
+  document.addEventListener("mouseenter", () => root.classList.add("cc-on"));
+}
+
+/* ==========================================================================
+   MAJOR — 흩어진 점들이 모여 "Scenography" 글자를 만드는 파티클 화면
+   ========================================================================== */
+let scenRaf = 0,
+  scenId = 0;
+async function scen() {
+  const cv = $("#scen");
+  if (!cv || !cv.offsetParent) return;
+  const id = ++scenId;
+  cancelAnimationFrame(scenRaf);
+  try {
+    await document.fonts.load("100px Anton");
+  } catch (e) {}
+  if (id !== scenId || !cv.offsetParent) return;
+
+  const dpr = Math.min(devicePixelRatio || 1, 2),
+    W = cv.clientWidth,
+    H = cv.clientHeight;
+  if (!W || !H) return;
+  cv.width = W * dpr;
+  cv.height = H * dpr;
+  const ctx = cv.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  // 글자를 화면 밖 캔버스에 그려서 픽셀 좌표를 뽑아냄
+  const WORD = "Scenography",
+    fam = 'Anton, Impact, "Arial Narrow Bold", sans-serif',
+    off = document.createElement("canvas");
+  off.width = W;
+  off.height = H;
+  const oc = off.getContext("2d");
+  oc.font = `400 100px ${fam}`;
+  const fs = Math.min((100 * W * 0.5) / oc.measureText(WORD).width, H * 0.2);
+  oc.font = `400 ${fs}px ${fam}`;
+  oc.textAlign = "center";
+  oc.textBaseline = "middle";
+  oc.fillText(WORD, W / 2, H * 0.52);
+  const gap = Math.max(3, Math.round(fs / 28)),
+    data = oc.getImageData(0, 0, W, H).data,
+    P = [];
+  for (let y = 0; y < H; y += gap)
+    for (let x = 0; x < W; x += gap)
+      if (data[(y * W + x) * 4 + 3] > 128)
+        P.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: 0,
+          vy: 0,
+          tx: x + (Math.random() - 0.5) * gap * 0.35,
+          ty: y + (Math.random() - 0.5) * gap * 0.35,
+          r: 0.9 + Math.pow(Math.random(), 2.4) * 2.1, // 작은 점이 많고 큰 점이 가끔 섞임
+          d: 600 + Math.random() * 1000, // 점마다 모이기 시작하는 시간(ms)
+        });
+
+  let mx = -999,
+    my = -999,
+    t0 = 0;
+  cv.onmousemove = (e) => {
+    const r = cv.getBoundingClientRect();
+    mx = e.clientX - r.left;
+    my = e.clientY - r.top;
+  };
+  cv.onmouseleave = () => (mx = my = -999);
+
+  (function loop(t) {
+    if (id !== scenId || !cv.offsetParent) return;
+    if (!t0) t0 = t;
+    const el = t - t0;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#050505";
+    ctx.beginPath();
+    for (const p of P) {
+      if (el < p.d) {
+        // 흩어져서 둥둥 떠다니는 단계
+        p.vx += (Math.random() - 0.5) * 0.5;
+        p.vy += (Math.random() - 0.5) * 0.5;
+        p.vx *= 0.96;
+        p.vy *= 0.96;
+      } else {
+        // 글자 위치로 모이는 단계
+        p.vx += (p.tx - p.x) * 0.055;
+        p.vy += (p.ty - p.y) * 0.055;
+        p.vx *= 0.82;
+        p.vy *= 0.82;
+      }
+      // 마우스 가까이 오면 점이 밀려남
+      const dx = p.x - mx,
+        dy = p.y - my,
+        dd = Math.hypot(dx, dy);
+      if (dd < 80 && dd > 0.1) {
+        const f = ((80 - dd) / 80) * 3.2;
+        p.vx += (dx / dd) * f;
+        p.vy += (dy / dd) * f;
+      }
+      p.x += p.vx;
+      p.y += p.vy;
+      ctx.moveTo(p.x + p.r, p.y);
+      ctx.arc(p.x, p.y, p.r, 0, 6.2832);
+    }
+    ctx.fill();
+    scenRaf = requestAnimationFrame(loop);
+  })(performance.now());
+}
+let scenTO;
+addEventListener("resize", () => {
+  clearTimeout(scenTO);
+  scenTO = setTimeout(scen, 200);
+});
