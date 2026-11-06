@@ -264,15 +264,17 @@ const DESIGNERS = PARTS.map((p) =>
       //   예) photo: "무대미술전공_202220520_세트_이서빈.jpeg"
       //   photo 를 비워 두면 아래 이름들을 차례로 찾아봄 (jpg / jpeg / png, 대문자 확장자도 OK)
       //     images/designer/scenic/01/profile.jpg   ← 사람 폴더 안 profile
-      //     images/designer/scenic/01/01.jpeg       ← 사람 폴더 안 번호 이름
       //     images/designer/scenic/01.jpeg          ← 파트 폴더에 번호 이름으로 바로
       photo: d.photo
         ? d.photo.includes("/")
           ? d.photo
           : "images/profile/" + d.photo
-        : withExt([base + "profile", base + num, `images/designer/${p.key}/${num}`]),
-      // 장면 사진: 1.jpg ~ 6.jpg (jpeg·png 도 OK. 01.jpeg 는 프로필 이름과 겹쳐서 장면에는 쓰지 않음)
-      images: Array.from({ length: 6 }, (_, n) => (d.images && d.images[n]) || withExt([`${base}${n + 1}`])),
+        : withExt([base + "profile", `images/designer/${p.key}/${num}`]),
+      // 장면 사진: 1.png ~ 6.png 또는 01.png ~ 06.png (jpg·jpeg 도 OK)
+      images: Array.from(
+        { length: 6 },
+        (_, n) => (d.images && d.images[n]) || withExt([`${base}${n + 1}`, `${base}0${n + 1}`]),
+      ),
       scenes: Array.from({ length: 6 }, (_, n) => sc[n] || [`S#${n + 1}.`, ""]),
     };
   }),
