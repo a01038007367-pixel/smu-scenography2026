@@ -35,11 +35,12 @@ const DESIGNER_DATA = {
     // ── Scenic 01 ─────────── 사진 폴더: images/designer/scenic/01/
     //    (화면 시안에 있던 내용을 예시로 넣어 두었어요. 실제 담당자 내용으로 바꿔 주세요.)
     {
-      ko: "조은아",
-      en: "Cho Euna",
-      email: "",
-      titleEn: "Shutter Island",
-      titleKo: "셔터 아일랜드",
+      ko: "이서빈",
+      en: "Lee Seobin",
+      photo: "images/designer/scenic/01/euna.png",
+      email: "eeseobin@naver.com",
+      titleEn: "CARMEN",
+      titleKo: "카르멘",
       desc: `셔터 아일랜드에서 관객이 반복적으로 경험하는 기본 정서는 폐쇄된 섬과 병원이라는 공간이 주는 서늘한 감금감과,
 테디가 보는 것이 현실인지 망상인지 판별할 수 없는 인식론적 불안이 결합된 상태다.
 이 감각은 플래시백, 환각, 현재 시점이 뒤섞이며 장면이 전환될 때마다 오히려 강화되고, 명확한 해소 없이 영화 후반부까지 지속된다.`,
