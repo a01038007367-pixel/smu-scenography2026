@@ -247,6 +247,9 @@ const FOLDER_COLORS = [
   "#e8628c", // 분홍
 ];
 
+// ★ 장면 사진 개수 (모든 디자이너 공통) — 6장으로 다시 늘리려면 숫자만 6으로
+const SCENE_COUNT = 5;
+
 // 사진 파일 확장자 후보 — 이름만 맞으면 확장자가 달라도 찾아냄
 const EXTS = ["jpg", "jpeg", "png", "JPG", "JPEG", "PNG", "webp"];
 const withExt = (names) => names.flatMap((n) => EXTS.map((e) => `${n}.${e}`));
@@ -270,12 +273,12 @@ const DESIGNERS = PARTS.map((p) =>
           ? d.photo
           : "images/profile/" + d.photo
         : withExt([base + "profile", `images/designer/${p.key}/${num}`]),
-      // 장면 사진: 1.png ~ 6.png 또는 01.png ~ 06.png (jpg·jpeg 도 OK)
+      // 장면 사진: 1.png ~ 5.png 또는 01.png ~ 05.png (jpg·jpeg 도 OK)
       images: Array.from(
-        { length: 6 },
+        { length: SCENE_COUNT },
         (_, n) => (d.images && d.images[n]) || withExt([`${base}${n + 1}`, `${base}0${n + 1}`]),
       ),
-      scenes: Array.from({ length: 6 }, (_, n) => sc[n] || [`S#${n + 1}.`, ""]),
+      scenes: Array.from({ length: SCENE_COUNT }, (_, n) => sc[n] || [`S#${n + 1}.`, ""]),
     };
   }),
 );
