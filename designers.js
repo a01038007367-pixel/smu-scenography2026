@@ -37,7 +37,7 @@ const DESIGNER_DATA = {
     {
       ko: "이서빈",
       en: "Lee Seobin",
-      photo: "images/designer/scenic/01/euna.png",
+      photo: "images/designer/scenic/무대미술전공_202220520_세트_이서빈.jpeg",
       email: "eeseobin@naver.com",
       titleEn: "CARMEN",
       titleKo: "카르멘",
