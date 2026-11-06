@@ -181,7 +181,7 @@ const COMMITTEE = [
   { role: "총무", name: "김민경" },
   { role: "세트장", name: "김서영" },
   { role: "의상장", name: "박소연" },
-  { role: "프로덕션장", name: "홍종표" },
+  { role: "프덕장", name: "홍종표" },
 ];
 COMMITTEE.forEach((m, i) => {
   $("#cg").insertAdjacentHTML(
@@ -247,6 +247,10 @@ const FOLDER_COLORS = [
   "#e8628c", // 분홍
 ];
 
+// 사진 파일 확장자 후보 — 이름만 맞으면 확장자가 달라도 찾아냄
+const EXTS = ["jpg", "jpeg", "png", "JPG", "JPEG", "PNG", "webp"];
+const withExt = (names) => names.flatMap((n) => EXTS.map((e) => `${n}.${e}`));
+
 // designers.js 의 내용을 화면에서 쓰기 좋은 형태로 정리 (사진 경로 자동 지정 포함)
 const DESIGNERS = PARTS.map((p) =>
   ((typeof DESIGNER_DATA !== "undefined" ? DESIGNER_DATA : {})[p.key] || []).map((d, k) => {
@@ -256,8 +260,19 @@ const DESIGNERS = PARTS.map((p) =>
     return {
       ...d,
       num,
-      photo: d.photo || base + "profile.jpg",
-      images: Array.from({ length: 6 }, (_, n) => (d.images && d.images[n]) || `${base}${n + 1}.jpg`),
+      // photo 에 파일 이름만 적으면 images/profile/ 폴더에서 찾음
+      //   예) photo: "무대미술전공_202220520_세트_이서빈.jpeg"
+      //   photo 를 비워 두면 아래 이름들을 차례로 찾아봄 (jpg / jpeg / png, 대문자 확장자도 OK)
+      //     images/designer/scenic/01/profile.jpg   ← 사람 폴더 안 profile
+      //     images/designer/scenic/01/01.jpeg       ← 사람 폴더 안 번호 이름
+      //     images/designer/scenic/01.jpeg          ← 파트 폴더에 번호 이름으로 바로
+      photo: d.photo
+        ? d.photo.includes("/")
+          ? d.photo
+          : "images/profile/" + d.photo
+        : withExt([base + "profile", base + num, `images/designer/${p.key}/${num}`]),
+      // 장면 사진: 1.jpg ~ 6.jpg (jpeg·png 도 OK. 01.jpeg 는 프로필 이름과 겹쳐서 장면에는 쓰지 않음)
+      images: Array.from({ length: 6 }, (_, n) => (d.images && d.images[n]) || withExt([`${base}${n + 1}`])),
       scenes: Array.from({ length: 6 }, (_, n) => sc[n] || [`S#${n + 1}.`, ""]),
     };
   }),
@@ -268,9 +283,18 @@ const esc = (v) =>
     .trim()
     .replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const br = (v) => esc(v).replace(/\n/g, "<br>");
-// 사진이 아직 없으면 img를 지우고 회색 빈칸(span)만 남김
-const imgTag = (src, alt) =>
-  `<img alt="${esc(alt)}" src="${esc(src)}" loading="lazy" onerror="this.remove()">`;
+// 사진 찾기: 후보 경로를 순서대로 시도하고, 다 없으면 img를 지워 회색 빈칸(span)만 남김
+// 한글 파일 이름은 맥/윈도우에서 글자 조합 방식(NFC/NFD)이 달라 못 찾는 경우가 있어 두 방식 모두 시도
+const imgTag = (src, alt) => {
+  const list = [...new Set([].concat(src || []).flatMap((s) => [String(s).normalize("NFC"), String(s).normalize("NFD")]))];
+  return `<img alt="${esc(alt)}" src="${esc(list[0] || "")}" data-next="${esc(list.slice(1).join("|"))}" loading="lazy" onerror="nextImg(this)">`;
+};
+window.nextImg = (el) => {
+  const rest = (el.dataset.next || "").split("|").filter(Boolean);
+  if (!rest.length) return el.remove();
+  el.dataset.next = rest.slice(1).join("|");
+  el.src = rest[0];
+};
 
 const F = $("#folders"),
   dh = $("#dh"),
