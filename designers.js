@@ -56,14 +56,14 @@ const DESIGNER_DATA = {
     },
     // ── Scenic 02 ─────────── 사진 폴더: images/designer/scenic/02/
     {
-      ko: "",
-      en: "",
-      email: "",
-      titleEn: "",
-      titleKo: "",
-      desc: ``,
-      topic: "",
-      concept: "",
+      ko: "조다현",
+      en: "Cho Dahyeon",
+      email: "dada@gamil.com",
+      titleEn: "tem",
+      titleKo: "템페스트",
+      desc: `줄거리 ~~`,
+      topic: "주제 ~~",
+      concept: "콘셉트 ~~",
       scenes: [
       ["S#1.", ""],
       ["S#2.", ""],
