@@ -263,6 +263,7 @@ const DESIGNERS = PARTS.map((p) =>
     return {
       ...d,
       num,
+      base,
       // photo 에 파일 이름만 적으면 images/profile/ 폴더에서 찾음
       //   예) photo: "무대미술전공_202220520_세트_이서빈.jpeg"
       //   photo 를 비워 두면 아래 이름들을 차례로 찾아봄 (jpg / jpeg / png, 대문자 확장자도 OK)
@@ -385,10 +386,12 @@ function openP(i, k) {
   dg.classList.remove("on");
   $("#v-designer").classList.add("detail");
 
+  const isScenic = PARTS[i].key === "scenic";
+  // 장면 시안 사진 5장 (사진 아래 글 두 줄) — 모든 파트 공통
   const scenes = d.scenes
     .map(
       (c, n) => `
-    <!-- 3-${n + 1}. 장면 사진 -->
+    <!-- 3-${n + 1}. 장면 시안 사진 -->
     <div class="dp dp-dark dp-scene">
       <figure class="sc rv">
         <div class="shot"><span>SCENE ${n + 1}</span>${imgTag(d.images[n], `${d.titleKo || d.titleEn} ${n + 1}`)}</div>
@@ -397,6 +400,18 @@ function openP(i, k) {
     </div>`,
     )
     .join("");
+  // Scenic만: 메인 사진(00) + 디테일 컷 슬라이드(00-1, 00-2 …) — 둘 다 아래 글 없음
+  const scenicMain = isScenic
+    ? `
+    <!-- 3-0. 메인 사진 (Scenic) -->
+    <div class="dp dp-dark dp-scene dp-main">
+      <figure class="sc rv">
+        <div class="shot"><span>MAIN</span>${imgTag(withExt([d.base + "00", d.base + "0"]), `${d.titleKo || d.titleEn} 메인`)}</div>
+      </figure>
+    </div>
+    <!-- 3-0. 디테일 컷 슬라이드 (Scenic, 사진이 있을 때만 나타남) -->
+    <div class="dp dp-dark dp-detail" data-n="0" hidden></div>`
+    : "";
 
   dd.innerHTML = `
     <!-- 1. 프로필 -->
@@ -423,6 +438,7 @@ function openP(i, k) {
         <hr class="bot">
       </div>
     </div>
+    ${scenicMain}
     ${scenes}
     ${
       PARTS[i].key === "production" // 유튜브 영상 링크는 Production 파트만
@@ -440,10 +456,79 @@ function openP(i, k) {
     }`;
   dd.classList.add("on");
   obs();
+  if (isScenic) loadDetails(d);
 
   dh.textContent = "← " + names[i];
   goBack = () => openD(i); // 상세 → 해당 파트 목록
   scrollTo(0, 0);
+}
+
+/* ---------- 3-1) Scenic 디테일 컷 슬라이드 ----------
+   디테일 사진 개수가 사람마다 달라서, 폴더에 있는 파일을 직접 찾아 개수를 정함
+     images/designer/scenic/01/00.png             ← 메인 사진
+     images/designer/scenic/01/00-1.png, 00-2.png, 00-3.png …  ← 디테일 컷 (옆으로 넘김)
+   (jpg·jpeg·png 모두 OK, 최대 12장, 번호는 1부터 빠짐없이) */
+const MAX_DETAILS = 12;
+// 후보 경로 중 실제로 있는 첫 파일을 찾음 (없으면 null)
+const findImg = (cands) =>
+  new Promise((res) => {
+    let k = 0;
+    const im = new Image();
+    im.onload = () => res(cands[k]);
+    im.onerror = () => (++k < cands.length ? (im.src = cands[k]) : res(null));
+    im.src = cands[0];
+  });
+let detailToken = 0;
+async function loadDetails(d) {
+  const token = ++detailToken;
+  for (const box of $$("#dd .dp-detail")) {
+    const n = +box.dataset.n,
+      list = [];
+    for (let k = 1; k <= MAX_DETAILS; k++) {
+      const src = await findImg(withExt([`${d.base}0${n}-${k}`, `${d.base}${n}-${k}`])); // n=0 → 00-1, 0-1
+      if (token !== detailToken) return; // 그 사이 다른 페이지로 이동했으면 중단
+      if (!src) break;
+      list.push(src);
+    }
+    if (list.length) buildSlider(box, list, `${d.titleKo || d.titleEn} S#${n} 디테일`);
+  }
+  obs();
+}
+const CHEV = (pts) =>
+  `<svg viewBox="0 0 40 80" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="2"/></svg>`;
+function buildSlider(box, list, alt) {
+  box.hidden = false;
+  box.innerHTML = `
+      <div class="sl rv">
+        <div class="sl-view"><div class="sl-track">${list
+          .map((src, k) => `<img alt="${esc(alt)} ${k + 1}" src="${esc(src)}" draggable="false">`)
+          .join("")}</div></div>
+        <button class="sl-btn prev" aria-label="이전 사진">${CHEV("36,4 4,40 36,76")}</button>
+        <button class="sl-btn next" aria-label="다음 사진">${CHEV("4,4 36,40 4,76")}</button>
+      </div>`;
+  const track = box.querySelector(".sl-track"),
+    prev = box.querySelector(".prev"),
+    next = box.querySelector(".next");
+  let cur = 0;
+  const go = (k) => {
+    cur = Math.max(0, Math.min(list.length - 1, k));
+    track.style.transform = `translateX(${-cur * 100}%)`;
+    prev.hidden = cur === 0; // 첫 장: 오른쪽 화살표만
+    next.hidden = cur === list.length - 1; // 마지막 장: 왼쪽 화살표만
+  };
+  prev.onclick = () => go(cur - 1);
+  next.onclick = () => go(cur + 1);
+  // 터치/드래그로 넘기기
+  const view = box.querySelector(".sl-view");
+  let sx = null;
+  view.onpointerdown = (e) => (sx = e.clientX);
+  view.onpointerup = (e) => {
+    if (sx === null) return;
+    const dx = e.clientX - sx;
+    sx = null;
+    if (Math.abs(dx) > 40) go(cur + (dx < 0 ? 1 : -1));
+  };
+  go(0);
 }
 
 /* ---------- 4) 폴더 목록(처음 화면)으로 복귀 ---------- */
