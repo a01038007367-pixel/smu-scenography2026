@@ -441,6 +441,12 @@ function openP(i, k) {
     ${scenicMain}
     ${scenes}
     ${
+      PARTS[i].key === "production"
+        ? `<!-- 3-6. 디테일 컷 슬라이드 (Production: 00-1, 00-2 … 사진이 있을 때만 나타남) -->
+    <div class="dp dp-dark dp-detail" data-n="0" hidden></div>`
+        : ""
+    }
+    ${
       PARTS[i].key === "production" // 유튜브 영상 링크는 Production 파트만
         ? `<!-- 4. 유튜브 영상 링크 -->
     <div class="dp dp-dark dp-yt">
@@ -456,14 +462,14 @@ function openP(i, k) {
     }`;
   dd.classList.add("on");
   obs();
-  if (isScenic) loadDetails(d);
+  if (isScenic || PARTS[i].key === "production") loadDetails(d); // 디테일 컷 슬라이드 (Scenic·Production)
 
   dh.textContent = "← " + names[i];
   goBack = () => openD(i); // 상세 → 해당 파트 목록
   scrollTo(0, 0);
 }
 
-/* ---------- 3-1) Scenic 디테일 컷 슬라이드 ----------
+/* ---------- 3-1) 디테일 컷 슬라이드 (Scenic: 메인 사진 다음 / Production: 장면 시안 5장 다음) ----------
    디테일 사진 개수가 사람마다 달라서, 폴더에 있는 파일을 직접 찾아 개수를 정함
      images/designer/scenic/01/00.png             ← 메인 사진
      images/designer/scenic/01/00-1.png, 00-2.png, 00-3.png …  ← 디테일 컷 (옆으로 넘김)
