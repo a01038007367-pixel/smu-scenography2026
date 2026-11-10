@@ -501,7 +501,7 @@ const DESIGNER_DATA = {
     // ── Production 01 ─────────── 사진 폴더: images/designer/production/01/
     {
       ko: "조은아",
-      en: "Con Euna",
+      en: "Cho Euna",
       email: "choeunaaa@gmail.com",
       titleEn: "Shutter Island",
       titleKo: "셔터 아일랜드",
@@ -515,8 +515,7 @@ const DESIGNER_DATA = {
       ["S#2.", "격리와 왜곡된 무의식으로 들어서는 진입점, 애시클리프 정신병원 입구"],
       ["S#3.", "거대한 뿌리 줄기에 짓눌린 비닐 아래 박제되어 공중에 매달린 생명채 그리고 감춰둔 외면의 세계, 무덤가"],
       ["S#4.", "광기와 비극이 정체되어 격리된 수감 공간, 레이첼 솔란도의 B병동 수감공간"],
-      ["S#5.", "관찰의 영역인 현실과 주관적 환각인 망상이 공존하며 정교하게 저울질되며 지배당하는 기괴하게 연결된 경계"],
-      ["S#6.", ""],
+      ["S#5.", "이 감각은 플래시백, 환각, 현재 시점이 뒤섞이며 장면이 전환될 때마다 오히려 강화되고, 명확한 해소 없이 영화 후반부까지 지속된다."],
       ],
       youtube: "https://www.youtube.com/?app=desktop&hl=ko&gl=KR",
     },
