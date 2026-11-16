@@ -1,5 +1,5 @@
 // ★ 링크는 여기서 수정하세요
-const PROMO = "https://youtu.be/h_qvn5gGQIk"; // 홍보 영상 링크
+const PROMO = "https://www.youtube.com/"; // 홍보 영상 링크https://youtu.be/h_qvn5gGQIk
 const MAKING = "https://www.youtube.com/"; // 메이킹 필름 링크
 const YOUTUBE = "https://www.youtube.com/", // Archive 링크
   INSTAGRAM = "https://www.instagram.com/",
