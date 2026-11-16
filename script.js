@@ -163,6 +163,7 @@ function show(v) {
   $$(".view").forEach((x) => x.classList.toggle("on", x.id === "v-" + v));
   $$("nav button").forEach((b) => b.classList.toggle("on", b.dataset.v === v));
   resetD(); // 어떤 메뉴로 이동하든 Designer는 폴더 목록 상태로 초기화
+  setHash("#" + v);
   scrollTo(0, 0);
   setTimeout(obs, 50);
   setTimeout(flip, 60);
@@ -331,6 +332,7 @@ fos.forEach((f) => (f.onclick = () => openD(+f.dataset.i)));
 
 /* ---------- 2) 디자이너 폴더 카드 목록 ---------- */
 function openD(i) {
+  setHash("#designer/" + PARTS[i].key);
   F.style.display = "none";
   hint.style.display = "none";
   dd.classList.remove("on");
@@ -382,6 +384,7 @@ $$(".dtabs button").forEach((b, i) => (b.onclick = () => openD(i)));
 
 /* ---------- 3) 디자이너 상세 페이지 ---------- */
 function openP(i, k) {
+  setHash("#designer/" + PARTS[i].key + "/" + (k + 1));
   const d = DESIGNERS[i][k];
   dg.classList.remove("on");
   $("#v-designer").classList.add("detail");
@@ -733,3 +736,34 @@ addEventListener("resize", () => {
   clearTimeout(scenTO);
   scenTO = setTimeout(scen, 200);
 });
+
+/* ---------- 4) 주소(해시)로 페이지 열기 ----------
+   예) #about, #major, #designer, #designer/production, #designer/production/1
+   주소를 바꾸면 해당 페이지가 바로 열리고, 뒤로가기도 동작합니다. */
+function setHash(h) {
+  if (location.hash !== h) history.replaceState(null, "", h);
+}
+function route() {
+  const p = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
+  const v = p[0];
+  if (!v) return;
+  if (v === "designer") {
+    show("designer");
+    const i = PARTS.findIndex((x) => x.key === p[1]);
+    if (i < 0) return;
+    openD(i);
+    const k = +p[2] - 1;
+    if (p[2] && DESIGNERS[i][k]) openP(i, k);
+  } else if (["about", "major"].includes(v)) {
+    show(v);
+  }
+}
+addEventListener("hashchange", route);
+if (location.hash) {
+  if (document.body.classList.contains("intro") && window.zd) {
+    enter(); // 인트로 화면을 먼저 넘기고 주소의 페이지를 엽니다
+    setTimeout(route, 1000);
+  } else {
+    route();
+  }
+}
