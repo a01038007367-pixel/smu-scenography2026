@@ -812,9 +812,9 @@ addEventListener("resize", () => {
 /* ---------- 4) 주소(해시)로 페이지 열기 ----------
    예) #about, #major, #designer, #designer/production, #designer/production/1
    주소를 바꾸면 해당 페이지가 바로 열리고, 뒤로가기도 동작합니다. */
-// 디자이너 이름 → 주소용 글자 (예: "Lee Seobin" → "lee-seobin")
+// 디자이너 이름 → 주소용 글자 (한글 이름 우선, 예: "이서빈" → "이서빈")
 function slugOf(d) {
-  return String(d.en || d.ko || "").trim().toLowerCase().replace(/[^a-z0-9가-힣]+/g, "-").replace(/^-|-$/g, "");
+  return String(d.ko || d.en || "").trim().toLowerCase().replace(/[^a-z0-9가-힣]+/g, "-").replace(/^-|-$/g, "");
 }
 function setHash(h) {
   if (location.hash !== h) history.replaceState(null, "", h || location.pathname);
