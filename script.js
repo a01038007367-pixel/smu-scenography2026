@@ -248,6 +248,24 @@ const PARTS = [
 ];
 const names = PARTS.map((p) => p.name);
 const ROLES = PARTS.map((p) => p.role); // 카드 상단 문구
+// ★ 세트(Scenic) 폴더 색상 — 순서대로 적용, 목록을 넘으면 처음부터 다시
+const SCENIC_COLORS = [
+  "#a89593",
+  "#b10015",
+  "#FF9F43",
+  "#cc2b59",
+  "#c58abb",
+  "#3D5FB6",
+  "#92bfa7",
+  "#67fcf0",
+  "#303E56",
+  "#009987",
+  "#9cac98",
+  "#ca217b",
+  "#e6d6bf",
+  "#920b10",
+];
+
 const FOLDER_COLORS = [
   "#7ecfdc", // 하늘
   "#8fd196", // 연두
@@ -353,7 +371,7 @@ function openD(i) {
   dg.innerHTML = DESIGNERS[i]
     .map(
       (d, k) => `
-      <div class="pf" data-k="${k}" style="--i:${k};--c:${FOLDER_COLORS[k % FOLDER_COLORS.length]}">
+      <div class="pf" data-k="${k}" style="--i:${k};--c:${(PARTS[i].key === "scenic" ? SCENIC_COLORS : FOLDER_COLORS)[k % (PARTS[i].key === "scenic" ? SCENIC_COLORS : FOLDER_COLORS).length]}">
         <div class="fd">
           <i class="tab"></i>
           <i class="paper"></i>
