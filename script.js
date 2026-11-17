@@ -249,6 +249,20 @@ const PARTS = [
 const names = PARTS.map((p) => p.name);
 const ROLES = PARTS.map((p) => p.role); // 카드 상단 문구
 // ★ 세트(Scenic) 폴더 색상 — 순서대로 적용, 목록을 넘으면 처음부터 다시
+// ★ 의상(Costume) 폴더 색상 — 순서대로 적용
+const COSTUME_COLORS = [
+  "#84142a",
+  "#f5ffa5",
+  "#EEE8D8",
+  "#BF0F30",
+  "#0A0A0A",
+  "#daaa97",
+  "#9f1219",
+  "#bb1f3b",
+  "#B50000",
+  "#4A3026",
+];
+
 const SCENIC_COLORS = [
   "#a89593",
   "#b10015",
@@ -276,6 +290,9 @@ const FOLDER_COLORS = [
   "#ee7e55", // 주황
   "#e8628c", // 분홍
 ];
+
+// 파트별 폴더 색 (목록에 없는 파트는 FOLDER_COLORS 사용)
+const PART_COLORS = { scenic: SCENIC_COLORS, costume: COSTUME_COLORS, production: FOLDER_COLORS };
 
 // ★ 장면 사진 개수 (모든 디자이너 공통) — 6장으로 다시 늘리려면 숫자만 6으로
 const SCENE_COUNT = 5;
@@ -371,7 +388,7 @@ function openD(i) {
   dg.innerHTML = DESIGNERS[i]
     .map(
       (d, k) => `
-      <div class="pf" data-k="${k}" style="--i:${k};--c:${(PARTS[i].key === "scenic" ? SCENIC_COLORS : FOLDER_COLORS)[k % (PARTS[i].key === "scenic" ? SCENIC_COLORS : FOLDER_COLORS).length]}">
+      <div class="pf" data-k="${k}" style="--i:${k};--c:${PART_COLORS[PARTS[i].key][k % PART_COLORS[PARTS[i].key].length]}">
         <div class="fd">
           <i class="tab"></i>
           <i class="paper"></i>
