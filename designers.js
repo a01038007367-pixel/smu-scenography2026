@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ★ 디자이너 42명 정보 입력 파일  (Scenic 14 · Costume 10 · Production 18)
+   ★ 디자이너 41명 정보 입력 파일  (Scenic 14 · Costume 10 · Production 17)
    ==========================================================================
 
    ▸ 사람 한 명 = { ... } 블록 하나. 블록 순서가 곧 폴더 순서입니다.
@@ -820,26 +820,6 @@ const DESIGNER_DATA = {
       youtube: "",
     },
     // ── Production 17 ─────────── 사진 폴더: images/designer/production/17/
-    {
-      ko: "",
-      en: "",
-      email: "",
-      titleEn: "",
-      titleKo: "",
-      desc: ``,
-      topic: "",
-      concept: "",
-      scenes: [
-      ["S#1.", ""],
-      ["S#2.", ""],
-      ["S#3.", ""],
-      ["S#4.", ""],
-      ["S#5.", ""],
-      ["S#6.", ""],
-      ],
-      youtube: "",
-    },
-    // ── Production 18 ─────────── 사진 폴더: images/designer/production/18/
     {
       ko: "",
       en: "",
