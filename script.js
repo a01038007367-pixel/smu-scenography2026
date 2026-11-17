@@ -463,14 +463,14 @@ function openP(i, k) {
   const isCostume = PARTS[i].key === "costume";
   const scenes = d.scenes
     .map(
-      (c, n) => `
+      (c, n) => (isCostume && k === 9 && n < SCENE_COUNT - 1 ? "" : `
     <!-- 3-${n + 1}. 장면 시안 사진 -->
     <div class="dp dp-dark dp-scene">
       <figure class="sc rv${isCostume ? " natural" : ""}">
         <div class="shot">${isCostume ? "" : `<span>SCENE ${n + 1}</span>`}${imgTag(d.images[n], `${d.titleKo || d.titleEn} ${n + 1}`)}</div>
         <figcaption>${br(c[0])}<br>${br(c[1])}</figcaption>
       </figure>
-    </div>`,
+    </div>`),
     )
     .join("");
   // Scenic만: 메인 사진(00) + 디테일 컷 슬라이드(00-1, 00-2 …) — 둘 다 아래 글 없음
