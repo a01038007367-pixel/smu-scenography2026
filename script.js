@@ -451,8 +451,8 @@ $$(".dtabs button").forEach((b, i) => (b.onclick = () => openD(i)));
 
 /* ---------- 3) 디자이너 상세 페이지 ---------- */
 function openP(i, k) {
-  setHash("#designer/" + PARTS[i].key + "/" + (k + 1));
   const d = DESIGNERS[i][k];
+  setHash("#designer/" + PARTS[i].key + "/" + slugOf(d));
   dg.classList.remove("on");
   $("#v-designer").classList.add("detail");
 
@@ -812,6 +812,10 @@ addEventListener("resize", () => {
 /* ---------- 4) 주소(해시)로 페이지 열기 ----------
    예) #about, #major, #designer, #designer/production, #designer/production/1
    주소를 바꾸면 해당 페이지가 바로 열리고, 뒤로가기도 동작합니다. */
+// 디자이너 이름 → 주소용 글자 (예: "Lee Seobin" → "lee-seobin")
+function slugOf(d) {
+  return String(d.en || d.ko || "").trim().toLowerCase().replace(/[^a-z0-9가-힣]+/g, "-").replace(/^-|-$/g, "");
+}
 function setHash(h) {
   if (location.hash !== h) history.replaceState(null, "", h || location.pathname);
 }
@@ -824,7 +828,12 @@ function route() {
     const i = PARTS.findIndex((x) => x.key === p[1]);
     if (i < 0) return;
     openD(i);
-    const k = +p[2] - 1;
+    let k = -1;
+    if (p[2]) {
+      const key = decodeURIComponent(p[2]).toLowerCase();
+      k = DESIGNERS[i].findIndex((d) => slugOf(d) === key);
+      if (k < 0) k = +p[2] - 1; // 예전 번호 주소도 열리도록
+    }
     if (p[2] && DESIGNERS[i][k]) openP(i, k);
   } else if (["about", "major"].includes(v)) {
     show(v);
