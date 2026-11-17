@@ -2188,3 +2188,21 @@ html.cc-hover .cur-box {
   height: 100%;
   border: 0;
 }
+
+/* 의상(Costume): 사진을 16:9로 자르지 않고 원래 비율 그대로 표시 */
+.sc.natural {
+  width: auto;
+}
+.sc.natural .shot {
+  aspect-ratio: auto;
+  background: none;
+  overflow: visible;
+}
+.sc.natural .shot img {
+  position: static;
+  width: auto;
+  height: auto;
+  max-width: 64vw;
+  max-height: calc(100vh - 330px);
+  object-fit: contain;
+}

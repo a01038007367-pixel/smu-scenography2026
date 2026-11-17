@@ -403,13 +403,14 @@ function openP(i, k) {
   // 세트(Scenic) 4번째(k=3)만 프로덕션 레이아웃으로 표시
   const prodLayout = PARTS[i].key === "production" || (PARTS[i].key === "scenic" && k === 3);
   const isScenic = PARTS[i].key === "scenic" && !prodLayout;
-  // 장면 시안 사진 5장 (사진 아래 글 두 줄) — 모든 파트 공통
+  // 장면 시안 사진 (사진 아래 글 두 줄) — 의상(costume)은 사진 원래 비율 그대로
+  const isCostume = PARTS[i].key === "costume";
   const scenes = d.scenes
     .map(
       (c, n) => `
     <!-- 3-${n + 1}. 장면 시안 사진 -->
     <div class="dp dp-dark dp-scene">
-      <figure class="sc rv">
+      <figure class="sc rv${isCostume ? " natural" : ""}">
         <div class="shot"><span>SCENE ${n + 1}</span>${imgTag(d.images[n], `${d.titleKo || d.titleEn} ${n + 1}`)}</div>
         <figcaption>${br(c[0])}<br>${br(c[1])}</figcaption>
       </figure>
