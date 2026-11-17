@@ -2206,3 +2206,9 @@ html.cc-hover .cur-box {
   max-height: calc(100vh - 330px);
   object-fit: contain;
 }
+
+/* 제목이 긴 폴더(24자 초과): 글자 크기를 줄여 폴더 안에 맞춤 */
+.fb.long b {
+  font-size: clamp(15px, 1.5vw, 24px);
+  line-height: 1.1;
+}

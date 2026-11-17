@@ -375,7 +375,7 @@ function openD(i) {
         <div class="fd">
           <i class="tab"></i>
           <i class="paper"></i>
-          <div class="fb">
+          <div class="fb${(d.titleEn || d.titleKo || "").length > 24 ? " long" : ""}">
             <small>${ROLES[i]}</small>
             <b>${esc(d.titleEn || d.titleKo) || "—"}</b>
             <p class="nm"><span>${esc(d.ko) || "Designer " + d.num}</span><span>${esc(d.en)}</span></p>
