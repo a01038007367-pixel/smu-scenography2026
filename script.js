@@ -467,7 +467,7 @@ function openP(i, k) {
     <!-- 3-${n + 1}. 장면 시안 사진 -->
     <div class="dp dp-dark dp-scene">
       <figure class="sc rv${isCostume ? " natural" : ""}">
-        <div class="shot"><span>SCENE ${n + 1}</span>${imgTag(d.images[n], `${d.titleKo || d.titleEn} ${n + 1}`)}</div>
+        <div class="shot">${isCostume ? "" : `<span>SCENE ${n + 1}</span>`}${imgTag(d.images[n], `${d.titleKo || d.titleEn} ${n + 1}`)}</div>
         <figcaption>${br(c[0])}<br>${br(c[1])}</figcaption>
       </figure>
     </div>`,
