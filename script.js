@@ -6,7 +6,7 @@ const YOUTUBE = "https://www.youtube.com/", // Archive 링크
   SMU = "https://www.smu.ac.kr/",
   MAP =
     "https://www.google.com/maps/search/?api=1&query=" +
-    encodeURIComponent("서울 용산구 이태원로 1289 BUNCKER");
+    encodeURIComponent("서울 용산구 이태원로 1289 BUNKER");
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)];
 $("#yt2").href = YOUTUBE;
@@ -16,7 +16,7 @@ $("#insta").href = INSTAGRAM;
 $("#smu").href = SMU;
 $("#mapl").href = $("#mapb").href = MAP;
 
-$("#mq").textContent = "A to .ZIP ✕ unzip the stage ✕ 2026.12.09–12.12 ✕ BUNCKER B1,B2 ✕ ".repeat(
+$("#mq").textContent = "A to .ZIP ✕ unzip the stage ✕ 2026.12.09–12.12 ✕ BUNKER B1,B2 ✕ ".repeat(
   8,
 );
 // intro
