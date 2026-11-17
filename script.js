@@ -155,6 +155,16 @@ addEventListener("keydown", () => {
 $("#intro").onclick = () => {
   if (window.zd) enter();
 };
+// 더블클릭하면 인트로 애니메이션 없이 바로 About 화면으로 이동
+$("#intro").addEventListener("dblclick", (e) => {
+  if (!document.body.classList.contains("intro")) return;
+  e.preventDefault();
+  first = 0; // 자동 인트로 실행 막기
+  window.zd = 1;
+  document.body.classList.remove("intro");
+  $("#intro").style.display = "none";
+  show("about");
+});
 $("#title").onclick = () => {
   if (!document.body.classList.contains("intro")) show("about");
 };
