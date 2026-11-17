@@ -469,6 +469,10 @@ function openP(i, k) {
       ${
         ytId(d.youtube)
           ? `<div class="ytframe rv"><iframe src="https://www.youtube.com/embed/${ytId(d.youtube)}?rel=0" title="${esc(d.titleKo || d.titleEn)} 작품 영상" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`
+          : d.youtube
+          ? `<a class="ytl rv" href="${esc(d.youtube)}" target="_blank" rel="noopener">
+        <span>▶ YOUTUBE ↗</span><small>${esc(d.titleKo || d.titleEn)} 작품 영상 보기</small>
+      </a>`
           : `<div class="ytl off rv"><span>▶ YOUTUBE</span><small>영상 링크 준비 중</small></div>`
       }
     </div>`
