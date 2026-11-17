@@ -173,7 +173,8 @@ function show(v) {
   $$(".view").forEach((x) => x.classList.toggle("on", x.id === "v-" + v));
   $$("nav button").forEach((b) => b.classList.toggle("on", b.dataset.v === v));
   resetD(); // 어떤 메뉴로 이동하든 Designer는 폴더 목록 상태로 초기화
-  setHash("#" + v);
+  // About / major / Archive 는 도메인 주소 그대로 (#붙이지 않음), Designer만 주소 표시
+  setHash(v === "designer" ? "#designer" : "");
   scrollTo(0, 0);
   setTimeout(obs, 50);
   setTimeout(flip, 60);
@@ -751,7 +752,7 @@ addEventListener("resize", () => {
    예) #about, #major, #designer, #designer/production, #designer/production/1
    주소를 바꾸면 해당 페이지가 바로 열리고, 뒤로가기도 동작합니다. */
 function setHash(h) {
-  if (location.hash !== h) history.replaceState(null, "", h);
+  if (location.hash !== h) history.replaceState(null, "", h || location.pathname);
 }
 function route() {
   const p = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
