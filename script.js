@@ -760,10 +760,10 @@ function route() {
 }
 addEventListener("hashchange", route);
 if (location.hash) {
-  if (document.body.classList.contains("intro") && window.zd) {
-    enter(); // 인트로 화면을 먼저 넘기고 주소의 페이지를 엽니다
-    setTimeout(route, 1000);
-  } else {
-    route();
-  }
+  // 주소로 바로 들어오면 인트로 애니메이션 없이 해당 페이지를 바로 엽니다
+  first = 0; // 인트로 자동 실행 막기
+  document.body.classList.remove("intro");
+  $("#intro").style.display = "none";
+  window.zd = 1;
+  route();
 }
