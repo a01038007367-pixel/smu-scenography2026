@@ -263,7 +263,7 @@ const PRODUCTION_COLORS = [
   "#e5d7fe",
   "#C06080",
   "#C5DCA0",
-  "#1cfc03",
+  "#55e800",
   "#8B1A2B",
   "#E87494",
   "#4f5448",
