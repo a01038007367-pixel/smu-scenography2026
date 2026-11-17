@@ -250,6 +250,27 @@ const names = PARTS.map((p) => p.name);
 const ROLES = PARTS.map((p) => p.role); // 카드 상단 문구
 // ★ 세트(Scenic) 폴더 색상 — 순서대로 적용, 목록을 넘으면 처음부터 다시
 // ★ 의상(Costume) 폴더 색상 — 순서대로 적용
+// ★ 프로덕션(Production) 폴더 색상 — 순서대로 적용
+const PRODUCTION_COLORS = [
+  "#263F53",
+  "#4C978A",
+  "#008000",
+  "#C83E35",
+  "#fff8dc",
+  "#5B0F18",
+  "#94f594",
+  "#b3dbbf",
+  "#e5d7fe",
+  "#C06080",
+  "#C5DCA0",
+  "#94D09A",
+  "#8B1A2B",
+  "#E87494",
+  "#4f5448",
+  "#ffac99",
+  "#55C5C1",
+];
+
 const COSTUME_COLORS = [
   "#84142a",
   "#f5ffa5",
@@ -291,8 +312,8 @@ const FOLDER_COLORS = [
   "#e8628c", // 분홍
 ];
 
-// 파트별 폴더 색 (목록에 없는 파트는 FOLDER_COLORS 사용)
-const PART_COLORS = { scenic: SCENIC_COLORS, costume: COSTUME_COLORS, production: FOLDER_COLORS };
+// 파트별 폴더 색
+const PART_COLORS = { scenic: SCENIC_COLORS, costume: COSTUME_COLORS, production: PRODUCTION_COLORS };
 
 // ★ 장면 사진 개수 (모든 디자이너 공통) — 6장으로 다시 늘리려면 숫자만 6으로
 const SCENE_COUNT = 5;
