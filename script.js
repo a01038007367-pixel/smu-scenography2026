@@ -463,7 +463,7 @@ function openP(i, k) {
   const isCostume = PARTS[i].key === "costume";
   const scenes = d.scenes
     .map(
-      (c, n) => (isCostume && k === 9 && n < SCENE_COUNT - 1 ? "" : `
+      (c, n) => (isCostume && k === 9 ? "" : `
     <!-- 3-${n + 1}. 장면 시안 사진 -->
     <div class="dp dp-dark dp-scene">
       <figure class="sc rv${isCostume ? " natural" : ""}">
@@ -486,6 +486,12 @@ function openP(i, k) {
     <div class="dp dp-dark dp-detail" data-n="0" hidden></div>`
     : "";
 
+  // 의상 10번째(정윤아): 프로필 바로 아래에 마지막 사진 한 장만 표시
+  const soloHtml =
+    isCostume && k === 9
+      ? `<div class="dp dp-dark dp-scene"><figure class="sc rv natural"><div class="shot">${imgTag(d.images[SCENE_COUNT - 1], `${d.titleKo || d.titleEn}`)}</div></figure></div>`
+      : "";
+
   dd.innerHTML = `
     <!-- 1. 프로필 -->
     <div class="dp dp1">
@@ -498,6 +504,8 @@ function openP(i, k) {
       </div>
       <div class="dp1-photo rv"><span>PROFILE</span>${imgTag(d.photo, d.en || d.ko)}</div>
     </div>
+
+    ${soloHtml}
 
     <!-- 2. 작품 소개 -->
     <div class="dp dp-dark dp2">
