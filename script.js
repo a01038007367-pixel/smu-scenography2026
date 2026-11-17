@@ -467,10 +467,8 @@ function openP(i, k) {
         ? `<!-- 4. 유튜브 영상 링크 -->
     <div class="dp dp-dark dp-yt">
       ${
-        d.youtube
-          ? `<a class="ytl rv" href="${esc(d.youtube)}" target="_blank" rel="noopener">
-        <span>▶ YOUTUBE ↗</span><small>${esc(d.titleKo || d.titleEn)} 작품 영상 보기</small>
-      </a>`
+        ytId(d.youtube)
+          ? `<div class="ytframe rv"><iframe src="https://www.youtube.com/embed/${ytId(d.youtube)}?rel=0" title="${esc(d.titleKo || d.titleEn)} 작품 영상" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`
           : `<div class="ytl off rv"><span>▶ YOUTUBE</span><small>영상 링크 준비 중</small></div>`
       }
     </div>`
@@ -779,4 +777,10 @@ if (location.hash) {
   $("#intro").style.display = "none";
   window.zd = 1;
   route();
+}
+
+/* ---------- 5) 유튜브 영상: 사이트 안에서 재생 (링크는 영상 ID로 변환) ---------- */
+function ytId(url) {
+  const m = String(url || "").match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : "";
 }
