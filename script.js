@@ -400,7 +400,9 @@ function openP(i, k) {
   dg.classList.remove("on");
   $("#v-designer").classList.add("detail");
 
-  const isScenic = PARTS[i].key === "scenic";
+  // 세트(Scenic) 4번째(k=3)만 프로덕션 레이아웃으로 표시
+  const prodLayout = PARTS[i].key === "production" || (PARTS[i].key === "scenic" && k === 3);
+  const isScenic = PARTS[i].key === "scenic" && !prodLayout;
   // 장면 시안 사진 5장 (사진 아래 글 두 줄) — 모든 파트 공통
   const scenes = d.scenes
     .map(
@@ -455,13 +457,13 @@ function openP(i, k) {
     ${scenicMain}
     ${scenes}
     ${
-      PARTS[i].key === "production"
+      prodLayout
         ? `<!-- 3-6. 디테일 컷 슬라이드 (Production: 00-1, 00-2 … 사진이 있을 때만 나타남) -->
     <div class="dp dp-dark dp-detail" data-n="0" hidden></div>`
         : ""
     }
     ${
-      PARTS[i].key === "production" // 유튜브 영상 링크는 Production 파트만
+      prodLayout // 유튜브 영상 링크는 Production 레이아웃에만
         ? `<!-- 4. 유튜브 영상 링크 -->
     <div class="dp dp-dark dp-yt">
       ${
@@ -476,7 +478,7 @@ function openP(i, k) {
     }`;
   dd.classList.add("on");
   obs();
-  if (isScenic || PARTS[i].key === "production") loadDetails(d); // 디테일 컷 슬라이드 (Scenic·Production)
+  if (isScenic || prodLayout) loadDetails(d); // 디테일 컷 슬라이드 (Scenic·Production)
 
   dh.textContent = "← " + names[i];
   goBack = () => openD(i); // 상세 → 해당 파트 목록
