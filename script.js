@@ -457,8 +457,9 @@ function openP(i, k) {
   $("#v-designer").classList.add("detail");
 
   // 세트(Scenic) 4번째(k=3)만 프로덕션 레이아웃으로 표시
-  const prodLayout = PARTS[i].key === "production" || (PARTS[i].key === "scenic" && k === 3);
-  const isScenic = PARTS[i].key === "scenic" && !prodLayout;
+  const prodLayout = PARTS[i].key === "production";
+  const isSuboo = PARTS[i].key === "scenic" && k === 3; // 서수빈: 00 메인 → 01~05 → 00-1~4 넘기기
+  const isScenic = PARTS[i].key === "scenic";
   // 장면 시안 사진 (사진 아래 글 두 줄) — 의상(costume)은 사진 원래 비율 그대로
   const isCostume = PARTS[i].key === "costume";
   const scenes = d.scenes
@@ -483,7 +484,7 @@ function openP(i, k) {
       </figure>
     </div>
     <!-- 3-0. 디테일 컷 슬라이드 (Scenic, 사진이 있을 때만 나타남) -->
-    <div class="dp dp-dark dp-detail" data-n="0" hidden></div>`
+    ${isSuboo ? "" : `<div class="dp dp-dark dp-detail" data-n="0" hidden></div>`}`
     : "";
 
   dd.innerHTML = `
@@ -514,13 +515,13 @@ function openP(i, k) {
     ${scenicMain}
     ${scenes}
     ${
-      prodLayout
+      prodLayout || isSuboo
         ? `<!-- 3-6. 디테일 컷 슬라이드 (Production: 00-1, 00-2 … 사진이 있을 때만 나타남) -->
     <div class="dp dp-dark dp-detail" data-n="0" hidden></div>`
         : ""
     }
     ${
-      prodLayout // 유튜브 영상 링크는 Production 레이아웃에만
+      prodLayout // 유튜브 영상 링크는 Production에만
         ? `<!-- 4. 유튜브 영상 링크 -->
     <div class="dp dp-dark dp-yt">
       ${
