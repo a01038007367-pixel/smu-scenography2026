@@ -436,7 +436,7 @@ const DESIGNER_DATA = {
     // ── Costume 07 ─────────── 사진 폴더: images/designer/costume/07/
     {
       ko: "고윤정",
-      en: "KoYoonJeong",
+      en: "Ko YoonJeong",
       email: "olevelevelo@gmail.com",
       titleEn: "Medea",
       titleKo: "메데이아",
