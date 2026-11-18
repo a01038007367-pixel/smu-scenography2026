@@ -419,7 +419,7 @@ const DESIGNER_DATA = {
       en: "Ko Youmin",
       email: "rumi0924@naver.com",
       titleEn: "Sweeney Todd",
-      titleKo: "스위니 토",
+      titleKo: "스위니 토드",
       desc: `아내와 딸을 잃고 억울한 누명을 쓴 이발사 벤자민 바커는 스위니 토드라는 이름으로 런던에 돌아온다.
       자신의 모든 것을 빼앗은 터핀 판사에게 복수하기 위해 이발소를 열고 살인을 시작한다.
       러빗 부인과 함께 잔혹한 범죄를 이어가던 그는 복수에 사로잡혀 점차 인간성을 잃어간다.`,
@@ -475,7 +475,7 @@ const DESIGNER_DATA = {
     },
     // ── Costume 09 ─────────── 사진 폴더: images/designer/costume/09/
     {
-      ko: "",
+      ko: "박소연",
       en: "Park Soyeon",
       email: "sosoyeon16@naver.com",
       titleEn: "SEVEN",
